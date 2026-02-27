@@ -43,5 +43,23 @@
     "reason": "Foreign ownership exceeds 49% — requires special zone or exemption",
     "priority": 2,
     "active": true
+  },
+  {
+    "id": "r-mm53f97bworo",
+    "name": "Minimum Capital Requirement",
+    "condition": "IF applicant is a commercial license applicant AND capital is less than AED 50,000",
+    "action": "REJECTED",
+    "reason": "Applicant does not meet the minimum capital requirement.",
+    "priority": 2,
+    "active": true
+  },
+  {
+    "id": "r-mm53f97b4whc",
+    "name": "Blacklist Policy",
+    "condition": "IF applicant is from a blacklisted entity",
+    "action": "REJECTED",
+    "reason": "Applicant is from a blacklisted entity.",
+    "priority": 1,
+    "active": true
   }
 ]

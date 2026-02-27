@@ -50,5 +50,18 @@
     "matchedRule": "demo-r1",
     "ruleName": "Minimum Capital Requirement",
     "reason": "Capital meets minimum threshold of AED 50,000"
+  },
+  {
+    "id": "d-mm53fytdlmdk",
+    "timestamp": "2026-02-27T16:15:36.193Z",
+    "facts": {
+      "capital": 100000,
+      "activity_type": "'general'",
+      "blacklisted": false
+    },
+    "decision": "APPROVED",
+    "matchedRule": "demo-r1",
+    "ruleName": "Minimum Capital Requirement",
+    "reason": "Capital meets minimum threshold of AED 50,000"
   }
 ]

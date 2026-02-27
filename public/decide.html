@@ -40,8 +40,11 @@ h1{font-size:28px;margin-bottom:8px} h1 .gold{color:#D4AF37}
 .presets button{padding:6px 12px;font-size:12px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.2);color:#D4AF37;border-radius:6px;cursor:pointer;margin-right:6px;margin-bottom:6px;font-family:'Inter',sans-serif}
 .presets button:hover{background:rgba(212,175,55,.2)}
 </style>
+<link rel="stylesheet" href="mobile.css">
 </head>
 <body>
+<button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <div class="sidebar">
   <div class="logo"><span>⚖️</span> Mizan</div>
   <nav>

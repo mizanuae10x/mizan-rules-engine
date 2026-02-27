@@ -44,8 +44,11 @@ tr{cursor:pointer}
 .close-btn{float:right;background:none;border:none;color:rgba(255,255,255,.5);font-size:24px;cursor:pointer}
 .empty{text-align:center;padding:60px;color:rgba(255,255,255,.3)}
 </style>
+<link rel="stylesheet" href="mobile.css">
 </head>
 <body>
+<button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <div class="sidebar">
   <div class="logo"><span>⚖️</span> Mizan</div>
   <nav>

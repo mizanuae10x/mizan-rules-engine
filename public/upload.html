@@ -44,8 +44,11 @@ textarea:focus{outline:none;border-color:#D4AF37}
 .demo-label{background:rgba(234,179,8,.15);color:#eab308;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:600;display:none}
 .demo-label.show{display:inline-block}
 </style>
+<link rel="stylesheet" href="mobile.css">
 </head>
 <body>
+<button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <div class="sidebar">
   <div class="logo"><span>⚖️</span> Mizan</div>
   <nav>

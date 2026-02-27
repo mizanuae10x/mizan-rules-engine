@@ -32,8 +32,11 @@ body{font-family:'Inter',sans-serif;background:#060C18;color:#fff;display:flex;m
 .card p{color:rgba(255,255,255,.6);font-size:14px;line-height:1.6}
 .footer{text-align:center;padding:40px;color:rgba(255,255,255,.3);font-size:13px;margin-top:60px}
 </style>
+<link rel="stylesheet" href="mobile.css">
 </head>
 <body>
+<button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <div class="sidebar">
   <div class="logo"><span>⚖️</span> Mizan</div>
   <nav>

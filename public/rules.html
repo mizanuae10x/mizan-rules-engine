@@ -48,8 +48,11 @@ h1{font-size:28px;margin-bottom:8px} h1 .gold{color:#D4AF37}
 .toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:2px;left:2px;transition:.2s}
 .toggle.on::after{left:20px}
 </style>
+<link rel="stylesheet" href="mobile.css">
 </head>
 <body>
+<button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <div class="sidebar">
   <div class="logo"><span>⚖️</span> Mizan</div>
   <nav>

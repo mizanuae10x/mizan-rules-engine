@@ -30,8 +30,11 @@ pre{background:rgba(6,12,24,.8);border:1px solid rgba(212,175,55,.1);border-radi
 .auth-note strong{color:#D4AF37}
 code{background:rgba(212,175,55,.1);padding:2px 6px;border-radius:4px;font-size:12px}
 </style>
+<link rel="stylesheet" href="mobile.css">
 </head>
 <body>
+<button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <div class="sidebar">
   <div class="logo"><span>⚖️</span> Mizan</div>
   <nav>
