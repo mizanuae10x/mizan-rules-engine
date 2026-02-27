@@ -1,0 +1,151 @@
+{
+  "project": "Mizan Rules Engine",
+  "description": "AI-powered platform that converts government policies into deterministic executable rules. Neuro-Symbolic architecture: LLM parses policy → Rule engine executes → Audit trail. Navy+Gold Mizan branding.",
+  "buildDir": "/Users/uae10x/.openclaw/workspace/projects/mizan-rules-engine",
+  "techStack": {
+    "frontend": "Vanilla HTML/CSS/JS — single page files",
+    "backend": "Node.js Express",
+    "styling": "Inter font, navy #0B1F3A + gold #D4AF37",
+    "rules": "JSON-based rule store with JS evaluation",
+    "llm": "OpenAI API for rule extraction",
+    "storage": "JSON files for MVP"
+  },
+  "designSystem": {
+    "primaryColor": "#0B1F3A",
+    "accentColor": "#D4AF37",
+    "font": "Inter",
+    "logo": "⚖️",
+    "brand": "Mizan Rules Engine"
+  },
+  "userStories": [
+    {
+      "id": "US-01",
+      "title": "Landing Page",
+      "description": "Hero page with Policy→Rules→Decisions flow, Mizan branding, feature highlights",
+      "file": "index.html",
+      "passes": false,
+      "acceptanceCriteria": [
+        "Hero with Policy→Rules→Decisions visual flow",
+        "Mizan navy+gold branding, ⚖️ logo",
+        "Get Started CTA button links to upload.html",
+        "4 feature cards: Parse, Validate, Execute, Audit",
+        "Responsive layout"
+      ]
+    },
+    {
+      "id": "US-02",
+      "title": "Policy Upload & Parsing",
+      "description": "Textarea to paste policy text, Extract Rules button calls OpenAI, shows editable rule cards",
+      "file": "upload.html + server.js",
+      "passes": false,
+      "acceptanceCriteria": [
+        "Textarea for policy text input",
+        "Extract Rules button with loading state",
+        "POST /api/extract calls OpenAI and returns rules array",
+        "Each rule: id, name, condition, action, priority",
+        "Rules displayed as editable cards",
+        "Save to rules.json button"
+      ]
+    },
+    {
+      "id": "US-03",
+      "title": "Rule Editor",
+      "description": "Visual rule management: view, edit, add, delete, toggle active/inactive rules",
+      "file": "rules.html",
+      "passes": false,
+      "acceptanceCriteria": [
+        "Rule list with cards showing name/condition/action/status",
+        "Click to edit rule inline",
+        "Add new rule button with form",
+        "Delete rule with confirm dialog",
+        "Toggle active/inactive per rule",
+        "Rules persisted in data/rules.json via API"
+      ]
+    },
+    {
+      "id": "US-04",
+      "title": "Decision Engine",
+      "description": "Test panel: submit JSON facts, engine evaluates rules, returns decision + matched rule + reasoning",
+      "file": "decide.html + engine.js",
+      "passes": false,
+      "acceptanceCriteria": [
+        "Key-value input form for case facts",
+        "Submit button triggers rule evaluation",
+        "Engine checks all active rules against facts",
+        "Returns: APPROVED/REJECTED/REVIEW + matched rule + reason",
+        "Decision shown in styled result card",
+        "Decision logged to data/decisions.json"
+      ]
+    },
+    {
+      "id": "US-05",
+      "title": "Audit Dashboard",
+      "description": "History table of all decisions with filter, detail view, CSV export",
+      "file": "audit.html",
+      "passes": false,
+      "acceptanceCriteria": [
+        "Summary cards: total/approved/rejected/review counts",
+        "Table: timestamp, input summary, decision, matched rule",
+        "Filter by decision type (APPROVED/REJECTED/REVIEW)",
+        "Click row → modal with full decision detail",
+        "Export CSV button downloads decisions"
+      ]
+    },
+    {
+      "id": "US-06",
+      "title": "REST API",
+      "description": "POST /api/decide and GET /api/rules endpoints with API key auth",
+      "file": "server.js + api-docs.html",
+      "passes": false,
+      "acceptanceCriteria": [
+        "POST /api/decide accepts {facts:{}} returns {decision, rule, reason}",
+        "GET /api/rules returns active rules array",
+        "X-API-Key header auth (key stored in .env)",
+        "api-docs.html page with curl examples",
+        "JSON error responses with status codes"
+      ]
+    },
+    {
+      "id": "US-07",
+      "title": "Conflict Detector",
+      "description": "Detect duplicate conditions, overlapping rules, show warnings with resolution suggestions",
+      "file": "rules.html (integrated)",
+      "passes": false,
+      "acceptanceCriteria": [
+        "Run Conflict Check button in rules page",
+        "Detects duplicate condition strings",
+        "Detects rules that always override each other (priority conflict)",
+        "Shows conflict warnings as yellow cards",
+        "Each warning has a suggested resolution"
+      ]
+    },
+    {
+      "id": "US-08",
+      "title": "Demo Mode",
+      "description": "Pre-loaded UAE Commercial License demo with 5 rules and 3 sample decisions",
+      "file": "data/demo.json + upload.html",
+      "passes": false,
+      "acceptanceCriteria": [
+        "Load Demo button on upload page",
+        "Loads 5 pre-written UAE commercial license rules",
+        "Loads 3 sample decisions in audit log",
+        "Demo Mode badge shown in header",
+        "Reset Demo button to clear demo data"
+      ]
+    }
+  ],
+  "serverSetup": {
+    "port": 3456,
+    "startCommand": "node server.js",
+    "dataDir": "data/",
+    "files": ["rules.json", "decisions.json"]
+  },
+  "notes": [
+    "Use OpenAI API key from process.env.OPENAI_API_KEY",
+    "All pages share a sidebar nav: Home, Upload, Rules, Decide, Audit, API Docs",
+    "Sidebar nav in navy #0B1F3A with gold active states",
+    "Mobile responsive is nice-to-have, not required for MVP",
+    "No npm frontend dependencies — vanilla JS only",
+    "Backend can use express + cors + dotenv only"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "rules": [
+    {
+      "id": "demo-r1",
+      "name": "Minimum Capital Requirement",
+      "condition": "capital >= 50000",
+      "action": "APPROVED",
+      "reason": "Capital meets minimum threshold of AED 50,000",
+      "priority": 1,
+      "active": true
+    },
+    {
+      "id": "demo-r2",
+      "name": "Restricted Activity Check",
+      "condition": "activity_type == 'restricted'",
+      "action": "REVIEW",
+      "reason": "Restricted activities require additional ministerial approval",
+      "priority": 2,
+      "active": true
+    },
+    {
+      "id": "demo-r3",
+      "name": "Blacklisted Entity",
+      "condition": "blacklisted == true",
+      "action": "REJECTED",
+      "reason": "Entity is on the federal blacklist",
+      "priority": 3,
+      "active": true
+    },
+    {
+      "id": "demo-r4",
+      "name": "Valid Trade Name",
+      "condition": "trade_name_approved == true",
+      "action": "APPROVED",
+      "reason": "Trade name has been approved by DED",
+      "priority": 1,
+      "active": true
+    },
+    {
+      "id": "demo-r5",
+      "name": "Foreign Ownership Limit",
+      "condition": "foreign_ownership_pct > 49",
+      "action": "REVIEW",
+      "reason": "Foreign ownership exceeds 49% — requires special zone or exemption",
+      "priority": 2,
+      "active": true
+    }
+  ],
+  "decisions": [
+    {
+      "id": "demo-d1",
+      "timestamp": "2026-02-01T09:30:00Z",
+      "facts": { "capital": 100000, "activity_type": "general", "blacklisted": false },
+      "decision": "APPROVED",
+      "matchedRule": "demo-r1",
+      "ruleName": "Minimum Capital Requirement",
+      "reason": "Capital meets minimum threshold of AED 50,000"
+    },
+    {
+      "id": "demo-d2",
+      "timestamp": "2026-02-01T10:15:00Z",
+      "facts": { "capital": 75000, "activity_type": "restricted", "blacklisted": false },
+      "decision": "REVIEW",
+      "matchedRule": "demo-r2",
+      "ruleName": "Restricted Activity Check",
+      "reason": "Restricted activities require additional ministerial approval"
+    },
+    {
+      "id": "demo-d3",
+      "timestamp": "2026-02-01T11:00:00Z",
+      "facts": { "capital": 30000, "activity_type": "general", "blacklisted": true },
+      "decision": "REJECTED",
+      "matchedRule": "demo-r3",
+      "ruleName": "Blacklisted Entity",
+      "reason": "Entity is on the federal blacklist"
+    }
+  ]
+}

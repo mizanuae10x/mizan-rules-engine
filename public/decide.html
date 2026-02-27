@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test Decision — Mizan Rules Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060C18;color:#fff;display:flex;min-height:100vh}
+.sidebar{width:240px;background:#0B1F3A;padding:24px 0;display:flex;flex-direction:column;position:fixed;height:100vh}
+.sidebar .logo{padding:0 24px 24px;font-size:24px;font-weight:700;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.2)}
+.sidebar nav{flex:1;padding:16px 0}
+.sidebar nav a{display:flex;align-items:center;gap:10px;padding:12px 24px;color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;transition:all .2s}
+.sidebar nav a:hover,.sidebar nav a.active{color:#D4AF37;background:rgba(212,175,55,.08)}
+.sidebar nav a.active{border-right:3px solid #D4AF37}
+.main{margin-left:240px;flex:1;padding:40px;max-width:900px}
+h1{font-size:28px;margin-bottom:8px} h1 .gold{color:#D4AF37}
+.subtitle{color:rgba(255,255,255,.5);margin-bottom:24px}
+.panel{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+@media(max-width:800px){.panel{grid-template-columns:1fr}}
+.input-panel{background:rgba(11,31,58,.6);border:1px solid rgba(212,175,55,.15);border-radius:12px;padding:24px}
+.input-panel h2{font-size:18px;color:#D4AF37;margin-bottom:16px}
+.fact-row{display:flex;gap:8px;margin-bottom:8px}
+.fact-row input{flex:1;background:rgba(6,12,24,.6);border:1px solid rgba(212,175,55,.2);border-radius:6px;padding:8px 12px;color:#fff;font-family:'Inter',sans-serif;font-size:13px}
+.fact-row input:focus{outline:none;border-color:#D4AF37}
+.fact-row button{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:16px}
+.btn{padding:10px 20px;background:#D4AF37;color:#0B1F3A;font-weight:600;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-family:'Inter',sans-serif;margin-top:12px}
+.btn:hover{background:#c9a430}
+.btn-outline{background:transparent;border:1px solid rgba(212,175,55,.4);color:#D4AF37;margin-left:8px}
+.result-panel{background:rgba(11,31,58,.6);border:1px solid rgba(212,175,55,.15);border-radius:12px;padding:24px}
+.result-panel h2{font-size:18px;color:#D4AF37;margin-bottom:16px}
+.decision-badge{font-size:36px;font-weight:700;text-align:center;padding:24px;border-radius:8px;margin-bottom:16px}
+.decision-badge.approved{background:rgba(34,197,94,.1);color:#22c55e}
+.decision-badge.rejected{background:rgba(239,68,68,.1);color:#ef4444}
+.decision-badge.review{background:rgba(234,179,8,.1);color:#eab308}
+.detail{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:8px}
+.detail strong{color:rgba(255,255,255,.8)}
+.empty-result{text-align:center;padding:40px;color:rgba(255,255,255,.3)}
+.presets{margin-bottom:16px}
+.presets button{padding:6px 12px;font-size:12px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.2);color:#D4AF37;border-radius:6px;cursor:pointer;margin-right:6px;margin-bottom:6px;font-family:'Inter',sans-serif}
+.presets button:hover{background:rgba(212,175,55,.2)}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo"><span>⚖️</span> Mizan</div>
+  <nav>
+    <a href="/">🏠 Home</a>
+    <a href="/upload.html">📄 Upload Policy</a>
+    <a href="/rules.html">✏️ Rule Editor</a>
+    <a href="/decide.html" class="active">🧪 Test Decision</a>
+    <a href="/audit.html">📊 Audit Log</a>
+    <a href="/api-docs.html">📚 API Docs</a>
+  </nav>
+</div>
+<div class="main">
+  <h1>🧪 <span class="gold">Test Decision</span></h1>
+  <p class="subtitle">Submit case facts and get a deterministic decision</p>
+  <div class="panel">
+    <div class="input-panel">
+      <h2>📋 Case Facts</h2>
+      <div class="presets">
+        <button onclick="loadPreset('approve')">✅ Approve Preset</button>
+        <button onclick="loadPreset('reject')">❌ Reject Preset</button>
+        <button onclick="loadPreset('review')">🔍 Review Preset</button>
+      </div>
+      <div id="factsContainer"></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-outline" onclick="addFact()" style="margin-top:0">+ Add Fact</button>
+      </div>
+      <button class="btn" onclick="submitDecision()">⚡ Submit Decision</button>
+    </div>
+    <div class="result-panel">
+      <h2>📊 Result</h2>
+      <div id="resultArea"><div class="empty-result">Submit facts to see the decision</div></div>
+    </div>
+  </div>
+</div>
+<script>
+let facts=[{key:'',value:''}];
+function render(){
+  document.getElementById('factsContainer').innerHTML=facts.map((f,i)=>`
+    <div class="fact-row">
+      <input placeholder="Key" value="${f.key}" onchange="facts[${i}].key=this.value">
+      <input placeholder="Value" value="${f.value}" onchange="facts[${i}].value=this.value">
+      <button onclick="facts.splice(${i},1);render()">×</button>
+    </div>
+  `).join('');
+}
+function addFact(){facts.push({key:'',value:''});render()}
+function loadPreset(type){
+  if(type==='approve')facts=[{key:'capital',value:'100000'},{key:'activity_type',value:"'general'"},{key:'blacklisted',value:'false'}];
+  if(type==='reject')facts=[{key:'capital',value:'30000'},{key:'activity_type',value:"'general'"},{key:'blacklisted',value:'true'}];
+  if(type==='review')facts=[{key:'capital',value:'75000'},{key:'activity_type',value:"'restricted'"},{key:'blacklisted',value:'false'}];
+  render();
+}
+async function submitDecision(){
+  const factsObj={};
+  for(const f of facts){
+    if(!f.key.trim())continue;
+    let v=f.value.trim();
+    if(v==='true')v=true;else if(v==='false')v=false;else if(!isNaN(v)&&v!=='')v=Number(v);
+    else try{v=JSON.parse(v)}catch{}
+    factsObj[f.key.trim()]=v;
+  }
+  if(!Object.keys(factsObj).length)return alert('Add at least one fact');
+  const res=await fetch('/api/decide',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({facts:factsObj})});
+  const d=await res.json();
+  const el=document.getElementById('resultArea');
+  el.innerHTML=`
+    <div class="decision-badge ${d.decision.toLowerCase()}">${d.decision==='APPROVED'?'✅':''}${d.decision==='REJECTED'?'❌':''}${d.decision==='REVIEW'?'🔍':''} ${d.decision}</div>
+    <div class="detail"><strong>Matched Rule:</strong> ${d.ruleName}</div>
+    <div class="detail"><strong>Rule ID:</strong> ${d.matchedRule||'N/A'}</div>
+    <div class="detail"><strong>Reason:</strong> ${d.reason}</div>
+    <div class="detail"><strong>Timestamp:</strong> ${new Date(d.timestamp).toLocaleString()}</div>
+    <div class="detail"><strong>Decision ID:</strong> ${d.id}</div>
+  `;
+}
+facts=[{key:'capital',value:'100000'},{key:'activity_type',value:"'general'"},{key:'blacklisted',value:'false'}];
+render();
+</script>
+</body>
+</html>

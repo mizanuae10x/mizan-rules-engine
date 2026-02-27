@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit Log — Mizan Rules Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060C18;color:#fff;display:flex;min-height:100vh}
+.sidebar{width:240px;background:#0B1F3A;padding:24px 0;display:flex;flex-direction:column;position:fixed;height:100vh}
+.sidebar .logo{padding:0 24px 24px;font-size:24px;font-weight:700;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.2)}
+.sidebar nav{flex:1;padding:16px 0}
+.sidebar nav a{display:flex;align-items:center;gap:10px;padding:12px 24px;color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;transition:all .2s}
+.sidebar nav a:hover,.sidebar nav a.active{color:#D4AF37;background:rgba(212,175,55,.08)}
+.sidebar nav a.active{border-right:3px solid #D4AF37}
+.main{margin-left:240px;flex:1;padding:40px}
+h1{font-size:28px;margin-bottom:8px} h1 .gold{color:#D4AF37}
+.subtitle{color:rgba(255,255,255,.5);margin-bottom:24px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:24px}
+.stat{background:rgba(11,31,58,.6);border:1px solid rgba(212,175,55,.15);border-radius:8px;padding:20px;text-align:center}
+.stat .num{font-size:32px;font-weight:700;color:#D4AF37}
+.stat .label{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px}
+.toolbar{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.btn{padding:8px 16px;background:#D4AF37;color:#0B1F3A;font-weight:600;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif}
+.btn:hover{background:#c9a430}
+.filter-btn{padding:6px 14px;font-size:12px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.2);color:#D4AF37;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif}
+.filter-btn:hover,.filter-btn.active{background:rgba(212,175,55,.2)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:12px 16px;font-size:12px;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(212,175,55,.1);text-transform:uppercase}
+td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.7)}
+tr:hover td{background:rgba(212,175,55,.04)}
+tr{cursor:pointer}
+.badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600}
+.badge.approved{background:rgba(34,197,94,.15);color:#22c55e}
+.badge.rejected{background:rgba(239,68,68,.15);color:#ef4444}
+.badge.review{background:rgba(234,179,8,.15);color:#eab308}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;justify-content:center;align-items:center}
+.modal.show{display:flex}
+.modal-content{background:#0B1F3A;border:1px solid rgba(212,175,55,.2);border-radius:12px;padding:32px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
+.modal-content h2{color:#D4AF37;margin-bottom:16px}
+.modal-content .row{margin-bottom:10px;font-size:13px}
+.modal-content .row strong{color:rgba(255,255,255,.8)}
+.modal-content pre{background:rgba(6,12,24,.6);padding:12px;border-radius:6px;font-size:12px;overflow-x:auto;color:rgba(255,255,255,.7)}
+.close-btn{float:right;background:none;border:none;color:rgba(255,255,255,.5);font-size:24px;cursor:pointer}
+.empty{text-align:center;padding:60px;color:rgba(255,255,255,.3)}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo"><span>⚖️</span> Mizan</div>
+  <nav>
+    <a href="/">🏠 Home</a>
+    <a href="/upload.html">📄 Upload Policy</a>
+    <a href="/rules.html">✏️ Rule Editor</a>
+    <a href="/decide.html">🧪 Test Decision</a>
+    <a href="/audit.html" class="active">📊 Audit Log</a>
+    <a href="/api-docs.html">📚 API Docs</a>
+  </nav>
+</div>
+<div class="main">
+  <h1>📊 <span class="gold">Audit Log</span></h1>
+  <p class="subtitle">Complete history of all decisions — fully traceable and exportable</p>
+  <div class="summary" id="summary"></div>
+  <div class="toolbar">
+    <button class="filter-btn active" onclick="setFilter('all')">All</button>
+    <button class="filter-btn" onclick="setFilter('APPROVED')">✅ Approved</button>
+    <button class="filter-btn" onclick="setFilter('REJECTED')">❌ Rejected</button>
+    <button class="filter-btn" onclick="setFilter('REVIEW')">🔍 Review</button>
+    <div style="flex:1"></div>
+    <button class="btn" onclick="exportCSV()">📥 Export CSV</button>
+    <button class="btn" style="background:transparent;border:1px solid rgba(212,175,55,.4);color:#D4AF37" onclick="loadData()">🔄 Refresh</button>
+  </div>
+  <table><thead><tr><th>Time</th><th>Decision</th><th>Rule</th><th>Reason</th></tr></thead><tbody id="tbody"></tbody></table>
+  <div id="emptyState" class="empty" style="display:none"><p>No decisions recorded</p><p style="font-size:14px;margin-top:8px">Test some decisions first</p></div>
+</div>
+<div class="modal" id="modal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal-content" id="modalContent"></div>
+</div>
+<script>
+let decisions=[],filter='all';
+async function loadData(){
+  decisions=await(await fetch('/api/decisions')).json();
+  decisions.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+  renderSummary();renderTable();
+}
+function renderSummary(){
+  const total=decisions.length;
+  const approved=decisions.filter(d=>d.decision==='APPROVED').length;
+  const rejected=decisions.filter(d=>d.decision==='REJECTED').length;
+  const review=decisions.filter(d=>d.decision==='REVIEW').length;
+  document.getElementById('summary').innerHTML=`
+    <div class="stat"><div class="num">${total}</div><div class="label">Total</div></div>
+    <div class="stat"><div class="num" style="color:#22c55e">${approved}</div><div class="label">Approved</div></div>
+    <div class="stat"><div class="num" style="color:#ef4444">${rejected}</div><div class="label">Rejected</div></div>
+    <div class="stat"><div class="num" style="color:#eab308">${review}</div><div class="label">Review</div></div>
+  `;
+}
+function renderTable(){
+  const filtered=filter==='all'?decisions:decisions.filter(d=>d.decision===filter);
+  if(!filtered.length){document.getElementById('tbody').innerHTML='';document.getElementById('emptyState').style.display='block';return}
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('tbody').innerHTML=filtered.map(d=>`
+    <tr onclick='showDetail(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
+      <td>${new Date(d.timestamp).toLocaleString()}</td>
+      <td><span class="badge ${d.decision.toLowerCase()}">${d.decision}</span></td>
+      <td>${d.ruleName||'—'}</td>
+      <td>${(d.reason||'').slice(0,60)}${(d.reason||'').length>60?'...':''}</td>
+    </tr>
+  `).join('');
+}
+function setFilter(f){
+  filter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderTable();
+}
+function showDetail(d){
+  document.getElementById('modalContent').innerHTML=`
+    <button class="close-btn" onclick="document.getElementById('modal').classList.remove('show')">×</button>
+    <h2>Decision Detail</h2>
+    <div class="row"><strong>ID:</strong> ${d.id}</div>
+    <div class="row"><strong>Time:</strong> ${new Date(d.timestamp).toLocaleString()}</div>
+    <div class="row"><strong>Decision:</strong> <span class="badge ${d.decision.toLowerCase()}">${d.decision}</span></div>
+    <div class="row"><strong>Matched Rule:</strong> ${d.ruleName} (${d.matchedRule||'N/A'})</div>
+    <div class="row"><strong>Reason:</strong> ${d.reason}</div>
+    <div class="row"><strong>Facts:</strong></div>
+    <pre>${JSON.stringify(d.facts,null,2)}</pre>
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+function exportCSV(){
+  if(!decisions.length)return alert('No data to export');
+  const header='ID,Timestamp,Decision,Rule,Reason,Facts';
+  const rows=decisions.map(d=>`"${d.id}","${d.timestamp}","${d.decision}","${d.ruleName}","${(d.reason||'').replace(/"/g,'""')}","${JSON.stringify(d.facts).replace(/"/g,'""')}"`);
+  const csv=header+'\n'+rows.join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mizan-audit-log.csv';a.click();
+}
+loadData();
+</script>
+</body>
+</html>

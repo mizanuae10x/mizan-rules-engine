@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>API Docs — Mizan Rules Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060C18;color:#fff;display:flex;min-height:100vh}
+.sidebar{width:240px;background:#0B1F3A;padding:24px 0;display:flex;flex-direction:column;position:fixed;height:100vh}
+.sidebar .logo{padding:0 24px 24px;font-size:24px;font-weight:700;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.2)}
+.sidebar nav{flex:1;padding:16px 0}
+.sidebar nav a{display:flex;align-items:center;gap:10px;padding:12px 24px;color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;transition:all .2s}
+.sidebar nav a:hover,.sidebar nav a.active{color:#D4AF37;background:rgba(212,175,55,.08)}
+.sidebar nav a.active{border-right:3px solid #D4AF37}
+.main{margin-left:240px;flex:1;padding:40px;max-width:900px}
+h1{font-size:28px;margin-bottom:8px} h1 .gold{color:#D4AF37}
+.subtitle{color:rgba(255,255,255,.5);margin-bottom:32px}
+.endpoint{background:rgba(11,31,58,.6);border:1px solid rgba(212,175,55,.15);border-radius:12px;padding:24px;margin-bottom:20px}
+.endpoint h3{color:#D4AF37;font-size:16px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.method{padding:3px 10px;border-radius:4px;font-size:12px;font-weight:700;font-family:monospace}
+.method.get{background:rgba(34,197,94,.15);color:#22c55e}
+.method.post{background:rgba(59,130,246,.15);color:#3b82f6}
+.method.put{background:rgba(234,179,8,.15);color:#eab308}
+.method.delete{background:rgba(239,68,68,.15);color:#ef4444}
+.endpoint .path{font-family:monospace;font-size:14px;color:rgba(255,255,255,.8)}
+.endpoint p{font-size:13px;color:rgba(255,255,255,.5);margin:8px 0}
+pre{background:rgba(6,12,24,.8);border:1px solid rgba(212,175,55,.1);border-radius:8px;padding:16px;font-size:12px;overflow-x:auto;color:rgba(255,255,255,.7);margin-top:8px;line-height:1.6}
+.auth-note{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);border-radius:8px;padding:16px;margin-bottom:24px;font-size:13px}
+.auth-note strong{color:#D4AF37}
+code{background:rgba(212,175,55,.1);padding:2px 6px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo"><span>⚖️</span> Mizan</div>
+  <nav>
+    <a href="/">🏠 Home</a>
+    <a href="/upload.html">📄 Upload Policy</a>
+    <a href="/rules.html">✏️ Rule Editor</a>
+    <a href="/decide.html">🧪 Test Decision</a>
+    <a href="/audit.html">📊 Audit Log</a>
+    <a href="/api-docs.html" class="active">📚 API Docs</a>
+  </nav>
+</div>
+<div class="main">
+  <h1>📚 <span class="gold">API Documentation</span></h1>
+  <p class="subtitle">REST API for programmatic access to the Mizan Rules Engine</p>
+
+  <div class="auth-note">
+    <strong>🔑 Authentication:</strong> Include <code>X-API-Key: mizan-rules-2026</code> header in all requests (optional for GET).
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method get">GET</span> <span class="path">/api/rules</span></h3>
+    <p>Returns all rules.</p>
+    <pre>curl http://localhost:3456/api/rules</pre>
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method post">POST</span> <span class="path">/api/rules</span></h3>
+    <p>Create a new rule.</p>
+    <pre>curl -X POST http://localhost:3456/api/rules \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: mizan-rules-2026" \
+  -d '{
+    "name": "Minimum Capital",
+    "condition": "capital >= 50000",
+    "action": "APPROVED",
+    "reason": "Capital meets threshold",
+    "priority": 1
+  }'</pre>
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method put">PUT</span> <span class="path">/api/rules/:id</span></h3>
+    <p>Update an existing rule by ID.</p>
+    <pre>curl -X PUT http://localhost:3456/api/rules/r-abc123 \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Updated Rule Name", "priority": 2}'</pre>
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method delete">DELETE</span> <span class="path">/api/rules/:id</span></h3>
+    <p>Delete a rule by ID.</p>
+    <pre>curl -X DELETE http://localhost:3456/api/rules/r-abc123</pre>
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method post">POST</span> <span class="path">/api/extract</span></h3>
+    <p>Extract rules from policy text using AI. Falls back to heuristic extraction if no OpenAI key.</p>
+    <pre>curl -X POST http://localhost:3456/api/extract \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "All applicants must have minimum capital of AED 50,000. Blacklisted entities shall be rejected."
+  }'</pre>
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method post">POST</span> <span class="path">/api/decide</span></h3>
+    <p>Submit case facts and receive a decision (APPROVED / REJECTED / REVIEW).</p>
+    <pre>curl -X POST http://localhost:3456/api/decide \
+  -H "Content-Type: application/json" \
+  -d '{
+    "facts": {
+      "capital": 100000,
+      "activity_type": "general",
+      "blacklisted": false
+    }
+  }'
+
+# Response:
+# {
+#   "id": "d-abc123",
+#   "decision": "APPROVED",
+#   "matchedRule": "demo-r1",
+#   "ruleName": "Minimum Capital Requirement",
+#   "reason": "Capital meets minimum threshold of AED 50,000",
+#   "timestamp": "2026-02-10T12:00:00.000Z"
+# }</pre>
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method get">GET</span> <span class="path">/api/decisions</span></h3>
+    <p>Returns all decision records (audit log).</p>
+    <pre>curl http://localhost:3456/api/decisions</pre>
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method get">GET</span> <span class="path">/api/conflicts</span></h3>
+    <p>Detect conflicting or duplicate rules.</p>
+    <pre>curl http://localhost:3456/api/conflicts</pre>
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method post">POST</span> <span class="path">/api/demo/load</span></h3>
+    <p>Load demo data (5 UAE commercial license rules + 3 sample decisions).</p>
+    <pre>curl -X POST http://localhost:3456/api/demo/load</pre>
+  </div>
+
+  <div class="endpoint">
+    <h3><span class="method post">POST</span> <span class="path">/api/demo/reset</span></h3>
+    <p>Reset all rules and decisions (clear data).</p>
+    <pre>curl -X POST http://localhost:3456/api/demo/reset</pre>
+  </div>
+</div>
+</body>
+</html>

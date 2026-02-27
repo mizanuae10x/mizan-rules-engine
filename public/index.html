@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mizan Rules Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#060C18;color:#fff;display:flex;min-height:100vh}
+.sidebar{width:240px;background:#0B1F3A;padding:24px 0;display:flex;flex-direction:column;position:fixed;height:100vh;z-index:10}
+.sidebar .logo{padding:0 24px 24px;font-size:24px;font-weight:700;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.2)}
+.sidebar .logo span{font-size:28px}
+.sidebar nav{flex:1;padding:16px 0}
+.sidebar nav a{display:flex;align-items:center;gap:10px;padding:12px 24px;color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;transition:all .2s}
+.sidebar nav a:hover,.sidebar nav a.active{color:#D4AF37;background:rgba(212,175,55,.08)}
+.sidebar nav a.active{border-right:3px solid #D4AF37}
+.main{margin-left:240px;flex:1;padding:40px}
+.hero{text-align:center;padding:80px 20px}
+.hero h1{font-size:48px;font-weight:700;margin-bottom:16px}
+.hero h1 .gold{color:#D4AF37}
+.hero p{font-size:18px;color:rgba(255,255,255,.6);max-width:600px;margin:0 auto 32px}
+.hero .flow{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:40px;flex-wrap:wrap}
+.hero .flow .step{background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);padding:12px 24px;border-radius:8px;font-weight:600;color:#D4AF37}
+.hero .flow .arrow{color:rgba(255,255,255,.3);font-size:24px}
+.btn{display:inline-block;padding:14px 32px;background:#D4AF37;color:#0B1F3A;font-weight:600;border-radius:8px;text-decoration:none;font-size:16px;transition:all .2s}
+.btn:hover{background:#c9a430;transform:translateY(-1px)}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;max-width:1000px;margin:60px auto 0}
+.card{background:rgba(11,31,58,.6);border:1px solid rgba(212,175,55,.15);border-radius:12px;padding:32px;transition:all .2s}
+.card:hover{border-color:rgba(212,175,55,.4);transform:translateY(-2px)}
+.card .icon{font-size:32px;margin-bottom:12px}
+.card h3{color:#D4AF37;margin-bottom:8px;font-size:16px}
+.card p{color:rgba(255,255,255,.6);font-size:14px;line-height:1.6}
+.footer{text-align:center;padding:40px;color:rgba(255,255,255,.3);font-size:13px;margin-top:60px}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo"><span>⚖️</span> Mizan</div>
+  <nav>
+    <a href="/" class="active">🏠 Home</a>
+    <a href="/upload.html">📄 Upload Policy</a>
+    <a href="/rules.html">✏️ Rule Editor</a>
+    <a href="/decide.html">🧪 Test Decision</a>
+    <a href="/audit.html">📊 Audit Log</a>
+    <a href="/api-docs.html">📚 API Docs</a>
+  </nav>
+</div>
+<div class="main">
+  <div class="hero">
+    <h1>⚖️ Mizan <span class="gold">Rules Engine</span></h1>
+    <p>AI-powered policy-to-execution platform. Convert regulations into deterministic, auditable, executable rules.</p>
+    <div class="flow">
+      <div class="step">📄 Policy</div>
+      <div class="arrow">→</div>
+      <div class="step">⚙️ Rules</div>
+      <div class="arrow">→</div>
+      <div class="step">✅ Decisions</div>
+    </div>
+    <a href="/upload.html" class="btn">Get Started →</a>
+  </div>
+  <div class="features">
+    <div class="card"><div class="icon">🤖</div><h3>AI-Powered Parsing</h3><p>Extract structured rules from policy text using LLM intelligence. Supports English and Arabic.</p></div>
+    <div class="card"><div class="icon">✅</div><h3>Rule Validation</h3><p>Detect conflicts, duplicates, and contradictions before deployment. Ensure regulatory consistency.</p></div>
+    <div class="card"><div class="icon">⚡</div><h3>Instant Execution</h3><p>Submit case facts and get deterministic decisions — APPROVED, REJECTED, or flagged for REVIEW.</p></div>
+    <div class="card"><div class="icon">📊</div><h3>Full Audit Trail</h3><p>Every decision is logged with timestamp, matched rule, and reasoning. Export to CSV for compliance.</p></div>
+  </div>
+  <div class="footer">⚖️ Mizan Rules Engine — Neuro-Symbolic Policy Execution</div>
+</div>
+</body>
+</html>
